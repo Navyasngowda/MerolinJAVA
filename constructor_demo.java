@@ -1,19 +1,16 @@
 class constructor{
     double l,b,h;
-}
-public class constructor_demo {
-    double l;
-    double b;
-    double h;
-    constructor_demo(double l,double b,double h)
+
+
+    constructor(double l,double b,double h)
     {
         this.l=l;
         this.b=b;
         this.h=h;
     }
-    constructor_demo(double l)
+    constructor(double l)
     {
-        l=b=h=l;   
+        this.l=b=h=l;   
     }
     double volume(){
         return l*b*h;
@@ -28,11 +25,12 @@ public class constructor_demo {
         System.out.println("Volume of box is"+volume);
 
     }
-    
+}
+    public class constructor_demo {
     
     public static void main(String[] args) {
-        constructor_demo cuboid=new constructor_demo(10,20,10);
-        constructor_demo cube=new constructor_demo(10);
+        constructor cuboid=new constructor(10,20,10);
+        constructor cube=new constructor(10);
         double v1;
         double v2;
         v1= cuboid.volume();
