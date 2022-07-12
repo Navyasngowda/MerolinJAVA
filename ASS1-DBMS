@@ -1,0 +1,291 @@
+CREATE TABLE BRANCH(
+BRANCHID VARCHAR(20) PRIMARY KEY,
+BRANCHNAME VARCHAR(20) NOT NULL,
+HOD VARCHAR(20) NOT NULL);
+
+mysql> DESC BRANCH;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| BRANCHID   | varchar(20) | NO   | PRI | NULL    |       |
+| BRANCHNAME | varchar(20) | NO   |     | NULL    |       |
+| HOD        | varchar(20) | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+CREATE TABLE STUDENT(
+ USN VARCHAR(20) PRIMARY KEY,
+ SNAME VARCHAR(20) NOT NULL,
+ ADDRESS VARCHAR(20),
+ BRANCHID VARCHAR(20),
+ FOREIGN KEY(BRANCHID)REFERENCES BRANCH(BRANCHID),
+ SEM VARCHAR(20));
+ 
+ mysql> DESC STUDENT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(20) | NO   | PRI | NULL    |       |
+| SNAME    | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | varchar(20) | YES  | MUL | NULL    |       |
+| SEM      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+CREATE TABLE BOOK(
+ BOOKID VARCHAR(20) PRIMARY KEY,
+ BOOKNAME VARCHAR(20) NOT NULL,
+ AUTHID VARCHAR(20),
+ FOREIGN KEY(AUTHID)REFERENCES AUTHOR(AUTHID),
+ PUBLISHER VARCHAR(20),
+ BRANCHID VARCHAR(20),
+ FOREIGN KEY(BRANCHID)REFERENCES BRANCH(BRANCHID));
+ 
+ mysql> DESC BOOK;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| BOOKID    | varchar(20) | NO   | PRI | NULL    |       |
+| BOOKNAME  | varchar(20) | NO   |     | NULL    |       |
+| AUTHID    | varchar(20) | YES  | MUL | NULL    |       |
+| PUBLISHER | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID  | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+CREATE TABLE AUTHOR(
+     AUTHID VARCHAR(20) PRIMARY KEY,
+     AUTHNAME VARCHAR(20) NOT NULL,
+    COUNTRY VARCHAR(20),
+     AGE VARCHAR(20));
+     
+     mysql> DESC AUTHOR;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| AUTHID   | varchar(20) | NO   | PRI | NULL    |       |
+| AUTHNAME | varchar(20) | NO   |     | NULL    |       |
+| COUNTRY  | varchar(20) | YES  |     | NULL    |       |
+| AGE      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+CREATE TABLE BORROW(
+  USN VARCHAR(20),
+  FOREIGN KEY(USN)REFERENCES STUDENT(USN),
+  BOOKID VARCHAR(20),
+  PRIMARY KEY(USN,BOOKID),
+  FOREIGN KEY(BOOKID)REFERENCES BOOK(BOOKID),
+    BORROWDATE DATE);
+    
+    mysql> DESC AUTHOR;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| AUTHID   | varchar(20) | NO   | PRI | NULL    |       |
+| AUTHNAME | varchar(20) | NO   |     | NULL    |       |
+| COUNTRY  | varchar(20) | YES  |     | NULL    |       |
+| AGE      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SHOW TABLES;
++-----------------------------+
+| Tables_in_VP21MC023_college |
++-----------------------------+
+| AUTHOR                      |
+| BOOK                        |
+| BORROW                      |
+| BRANCH                      |
+| STUDENT                     |
++-----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B1','MCA','Deepthi');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B2','MBA','Suresh');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B3','ME','Krithika');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B4','CS','Pavan');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B5','Civil','Sujna');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO BRANCH
+    -> VALUES('B6','ME','Nithin');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from BRANCH;
++----------+------------+----------+
+| BRANCHID | BRANCHNAME | HOD      |
++----------+------------+----------+
+| B1       | MCA        | Deepthi  |
+| B2       | MBA        | Suresh   |
+| B3       | ME         | Krithika |
+| B4       | CS         | Pavan    |
+| B5       | Civil      | Sujna    |
+| B6       | ME         | Nithin   |
++----------+------------+----------+
+6 rows in set (0.00 sec)
+
+ INSERT INTO STUDENT
+    -> VALUES('4VP21MC021','Melisha','Puttur','B1',1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('4VP21MC022','Macwil','Kalladka','B2',2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO STUDENT
+    -> VALUES('4VP21CS051','Anil','Maril','B3',3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('4VP21CS048','Shilpa','Manglore','B4',4);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('4VP21CI030','Karan','Banglore','B5',5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('4VP21ME014','Riyona','Puttur','B6',6);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from STUDENT;
++------------+---------+----------+----------+------+
+| USN        | SNAME   | ADDRESS  | BRANCHID | SEM  |
++------------+---------+----------+----------+------+
+| 4VP21CI030 | Karan   | Banglore | B5       | 5    |
+| 4VP21CS048 | Shilpa  | Manglore | B4       | 4    |
+| 4VP21CS051 | Anil    | Maril    | B3       | 3    |
+| 4VP21MC021 | Melisha | Puttur   | B1       | 1    |
+| 4VP21MC022 | Macwil  | Kalladka | B2       | 2    |
+| 4VP21ME014 | Riyona  | Puttur   | B6       | 6    |
++------------+---------+----------+----------+------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A1','Ramez Elmasri','India',51);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A2','Badhrinath','US',52);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A3','Ellis Horowitz','Japan',34);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A4','Deepak','India',41);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A5','Jungook','Korea',40);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO AUTHOR
+    -> VALUES('A6','Akil','Maril',34);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM AUTHOR;
++--------+----------------+---------+------+
+| AUTHID | AUTHNAME       | COUNTRY | AGE  |
++--------+----------------+---------+------+
+| A1     | Ramez Elmasri  | India   | 51   |
+| A2     | Badhrinath     | US      | 52   |
+| A3     | Ellis Horowitz | Japan   | 34   |
+| A4     | Deepak         | India   | 41   |
+| A5     | Jungook        | Korea   | 40   |
+| A6     | Akil           | Maril   | 34   |
++--------+----------------+---------+------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO BOOK
+    -> VALUES('BK2','Rearch Methodology','A2','PEARSON','B2');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BOOK
+    -> VALUES('BK3','Data Structure','A3','MC Graw Hill','B3');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BOOK
+    -> VALUES('BK4','Computer Network','A4','MC Graw Hill','B4');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BOOK
+    -> VALUES('BK5','Themo Dynamics','A5','taylor','B5');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BOOK
+    -> VALUES('BK6','Web Technology','A6','Anil','B6');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from BOOK;
++--------+--------------------+--------+--------------+----------+
+| BOOKID | BOOKNAME           | AUTHID | PUBLISHER    | BRANCHID |
++--------+--------------------+--------+--------------+----------+
+| BK1    | DBMS               | A1     | PEARSON      | B1       |
+| BK2    | Rearch Methodology | A2     | PEARSON      | B2       |
+| BK3    | Data Structure     | A3     | MC Graw Hill | B3       |
+| BK4    | Computer Network   | A4     | MC Graw Hill | B4       |
+| BK5    | Themo Dynamics     | A5     | taylor       | B5       |
+| BK6    | Web Technology     | A6     | Anil         | B6       |
++--------+--------------------+--------+--------------+----------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21CI030','BK1','2021-05-21');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21CS048','BK2','2021-05-10');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21CS051','BK3','2021-08-15');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21MC021','BK4','2022-06-20');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21MC022','BK5','2022-02-20');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO BORROW
+    -> VALUES('4VP21ME014','BK6','2022-09-12');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> SELECT *FROM BORROW;
++------------+--------+------------+
+| USN        | BOOKID | BORROWDATE |
++------------+--------+------------+
+| 4VP21CI030 | BK1    | 2021-05-21 |
+| 4VP21CS048 | BK2    | 2021-05-10 |
+| 4VP21CS051 | BK3    | 2021-08-15 |
+| 4VP21MC021 | BK4    | 2022-06-20 |
+| 4VP21MC022 | BK5    | 2022-02-20 |
+| 4VP21ME014 | BK6    | 2022-09-12 |
++------------+--------+------------+
+6 rows in set (0.00 sec)
+
+
+     
+     
