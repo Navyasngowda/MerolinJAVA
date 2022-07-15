@@ -1,0 +1,370 @@
+create database VP21MC023_college;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE VP21MC023_college;
+Database changed
+mysql> CREATE TABLE STUDENT
+    -> (USN VARCHAR(10) PRIMARY KEY,
+    -> NAME VARCHAR(20) NOT NULL,
+    -> ADDRESS VARCHAR(20),
+    -> BRANCHID VARCHAR(20) NOT NULL,
+    -> SEM VARCHAR(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select *from STUDENT;
+Empty set (0.00 sec)
+
+mysql> DESC STUDENT;
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+No connection. Trying to reconnect...
+Connection id:    18
+Current database: VP21MC023_college
+
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(10) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | varchar(20) | NO   |     | NULL    |       |
+| SEM      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.05 sec)
+
+mysql> ALTER TABLE STUDENT MODIFY BRANCHID INTEGER;
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+No connection. Trying to reconnect...
+Connection id:    29
+Current database: VP21MC023_college
+
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC STUDENT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(10) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | int         | YES  |     | NULL    |       |
+| SEM      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> ALTER TABLE STUDENT MODIFY SEM CHAR;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC STUDENT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(10) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | int         | YES  |     | NULL    |       |
+| SEM      | char(1)     | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> COMMIT;
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+No connection. Trying to reconnect...
+Connection id:    22
+Current database: VP21MC023_college
+
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> CREATE TABLE BRANCH
+    -> (BRANCHID VARCHAR(10) PRIMARY KEY,
+    -> BNAME VARCHAR(20) NOT NULL,
+    -> HOD VARCHAR(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT *FROM BRANCH;
+Empty set (0.00 sec)
+
+mysql> DESC BRANCH;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| BRANCHID | varchar(10) | NO   | PRI | NULL    |       |
+| BNAME    | varchar(20) | NO   |     | NULL    |       |
+| HOD      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> ALTER TABLE STUDENT
+    -> ALTER ADD LOC VARCHAR(20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ADD LOC VARCHAR(20)' at line 2
+mysql> ALTER TABLE STUDENT
+    -> ADD LOC VARCHAR(20);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC STUDENT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(10) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | int         | YES  |     | NULL    |       |
+| SEM      | char(1)     | YES  |     | NULL    |       |
+| LOC      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> ALTER TABLE STUDENT DROP COLUMN LOC;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DESC STUDENT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(10) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | int         | YES  |     | NULL    |       |
+| SEM      | char(1)     | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+ 
+ mysql> ALTER TABLE BRANCH ADD FOREIGN KEY(USN) REFERENCES STUDENT(USN);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC BRANCH;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| USN   | varchar(20) | NO   | PRI | NULL    |       |
+| NAME  | varchar(20) | NO   |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('101','MELISHA');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+---------+
+| USN        | NAME    |
++------------+---------+
+| 4VP21MC023 | MELISHA |
++------------+---------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO STUDENT
+    ->  VALUES('4VP21MC022','MANISHA');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO STUDENT
+    ->  VALUES('4VP21MC021','VRIDDHI');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+---------+
+| USN        | NAME    |
++------------+---------+
+| 4VP21MC021 | VRIDDHI |
+| 4VP21MC022 | MANISHA |
+| 4VP21MC023 | MELISHA |
++------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> DELETE FROM STUDENT WHERE USN='4VP21MC021';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+---------+
+| USN        | NAME    |
++------------+---------+
+| 4VP21MC022 | MANISHA |
+| 4VP21MC023 | MELISHA |
++------------+---------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT(USN) FROM STUDENT;
++------------+
+| USN        |
++------------+
+| 4VP21MC022 |
+| 4VP21MC023 |
++------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT(NAME) FROM STUDENT;
++---------+
+| NAME    |
++---------+
+| MANISHA |
+| MELISHA |
++---------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(USN) FROM STUDENT;
++------------+
+| COUNT(USN) |
++------------+
+|          2 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MIN(USN) FROM STUDENT;
++------------+
+| MIN(USN)   |
++------------+
+| 4VP21MC022 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MAX(USN) FROM STUDENT;
++------------+
+| MAX(USN)   |
++------------+
+| 4VP21MC023 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO STUDENT
+    -> VALUES('101','VRIDDHI');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+---------+
+| USN        | NAME    |
++------------+---------+
+| 101        | VRIDDHI |
+| 4VP21MC022 | MANISHA |
+| 4VP21MC023 | MELISHA |
++------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT *FROM BRANCH;
++------------+------+
+| USN        | NAME |
++------------+------+
+| 101        | CS   |
+| 4VP21MC022 | MCA  |
+| 4VP21MC023 | EC   |
++------------+------+
+3 rows in set (0.00 sec)
+
+
+mysql> SELECT NAME
+    -> FROM BRANCH
+    -> WHERE USN=101;
++------+
+| NAME |
++------+
+| CS   |
++------+
+1 row in set, 2 warnings (0.00 sec)
+
+CREATE TABLE BRANCH1(
+BRANCHID VARCHAR(20) PRIMARY KEY,
+BRANCHNAME VARCHAR(20) NOT NULL,
+HOD VARCHAR(20) NOT NULL);
+
+mysql> DESC BRANCH1;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| BRANCHID   | varchar(20) | NO   | PRI | NULL    |       |
+| BRANCHNAME | varchar(20) | NO   |     | NULL    |       |
+| HOD        | varchar(20) | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+ 
+ CREATE TABLE STUDENT1(
+ USN VARCHAR(20) PRIMARY KEY,
+ NAME VARCHAR(20) NOT NULL,
+ ADDRESS VARCHAR(20),
+ BRANCHID VARCHAR(20),
+ SEM VARCHAR(20));
+ 
+ mysql> DESC STUDENT1;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| USN      | varchar(20) | NO   | PRI | NULL    |       |
+| NAME     | varchar(20) | NO   |     | NULL    |       |
+| ADDRESS  | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID | varchar(20) | YES  |     | NULL    |       |
+| SEM      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+ CREATE TABLE BOOK(
+ BOOKID VARCHAR(20) PRIMARY KEY,
+ BOOKNAME VARCHAR(20) NOT NULL,
+ AUTHID VARCHAR(20),
+ PUBLISHER VARCHAR(20),
+ BRANCHID VARCHAR(20));
+ 
+ mysql> DESC BOOK;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| BOOKID    | varchar(20) | NO   | PRI | NULL    |       |
+| BOOKNAME  | varchar(20) | NO   |     | NULL    |       |
+| AUTHID    | varchar(20) | YES  |     | NULL    |       |
+| PUBLISHER | varchar(20) | YES  |     | NULL    |       |
+| BRANCHID  | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE AUTHOR(
+    -> AUTHID VARCHAR(20) PRIMARY KEY,
+    -> AUTHNAME VARCHAR(20) NOT NULL,
+    -> COUNTRY VARCHAR(20),
+    -> AGE VARCHAR(20));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DESC AUTHOR;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| AUTHID   | varchar(20) | NO   | PRI | NULL    |       |
+| AUTHNAME | varchar(20) | NO   |     | NULL    |       |
+| COUNTRY  | varchar(20) | YES  |     | NULL    |       |
+| AGE      | NUMBER      | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE BORROW(
+    -> USN VARCHAR(20) PRIMARY KEY,
+    -> BOOKID VARCHAR(20),
+    -> BORROWDATE DATE);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC BORROW;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| USN        | varchar(20) | NO   | PRI | NULL    |       |
+| BOOKID     | varchar(20) | YES  |     | NULL    |       |
+| BORROWDATE | date        | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
