@@ -1,0 +1,191 @@
+CREATE TABLE STUDENT(
+USN VARCHAR(20) PRIMARY KEY,
+SNAME VARCHAR(20) NOT NULL,
+DATE_OF_BIRTH DATE,
+BRANCH VARCHAR(20),
+MARK1 FLOAT(5,2),
+MARK2 FLOAT(5,2),
+MARK3 FLOAT(5,2),
+TOTAL FLOAT(5,2),
+GPA FLOAT(5,2));
+
+mysql> DESC STUDENT;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| USN           | varchar(20) | NO   | PRI | NULL    |       |
+| SNAME         | varchar(20) | NO   |     | NULL    |       |
+| DATE_OF_BIRTH | date        | YES  |     | NULL    |       |
+| BRANCH        | varchar(20) | YES  |     | NULL    |       |
+| MARK1         | float(5,2)  | YES  |     | NULL    |       |
+| MARK2         | float(5,2)  | YES  |     | NULL    |       |
+| MARK3         | float(5,2)  | YES  |     | NULL    |       |
+| TOTAL         | float(5,2)  | YES  |     | NULL    |       |
+| GPA           | float(5,2)  | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+9 rows in set (0.01 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('4VP21MC021','SUSHMA','2021-04-12','MCA',78,50,90);     
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('4VP21MC020','SAAYLI','2020-03-11','MCA',80,65,95);     
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('1001','PAVAN','2022-07-21','MBA',70,66,71);     
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('4VP21CS001','KUMAR','2021-05-14','CS',45,93,70);     
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('4VP21CS045','MAHAR','2021-05-14','CS',68,96,40);     
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO STUDENT(USN,SNAME,DATE_OF_BIRTH,BRANCH,MARK1,MARK2,MARK3)
+    ->  VALUES('1002','SUJNA','2018-02-23','MBA',55,85,66);     
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+--------+---------------+--------+-------+-------+-------+-------+------+
+| USN        | SNAME  | DATE_OF_BIRTH | BRANCH | MARK1 | MARK2 | MARK3 | TOTAL | GPA  |
++------------+--------+---------------+--------+-------+-------+-------+-------+------+
+| 1001       | PAVAN  | 2022-07-21    | MBA    | 70.00 | 66.00 | 71.00 |  NULL | NULL |
+| 1002       | SUJNA  | 2018-02-23    | MBA    | 55.00 | 85.00 | 66.00 |  NULL | NULL |
+| 4VP21CS001 | KUMAR  | 2021-05-14    | CS     | 45.00 | 93.00 | 70.00 |  NULL | NULL |
+| 4VP21CS045 | MAHAR  | 2021-05-14    | CS     | 68.00 | 96.00 | 40.00 |  NULL | NULL |
+| 4VP21MC020 | SAAYLI | 2020-03-11    | MCA    | 80.00 | 65.00 | 95.00 |  NULL | NULL |
+| 4VP21MC021 | SUSHMA | 2021-04-12    | MCA    | 78.00 | 50.00 | 90.00 |  NULL | NULL |
++------------+--------+---------------+--------+-------+-------+-------+-------+------+
+6 rows in set (0.00 sec)
+
+1.UPDATE STUDENT
+SET TOTAL=MARK1+MARK2+MARK3;
+
+mysql> SELECT *FROM STUDENT;
++------------+--------+---------------+--------+-------+-------+-------+--------+------+
+| USN        | SNAME  | DATE_OF_BIRTH | BRANCH | MARK1 | MARK2 | MARK3 | TOTAL  | GPA  |
++------------+--------+---------------+--------+-------+-------+-------+--------+------+
+| 1001       | PAVAN  | 2022-07-21    | MBA    | 70.00 | 66.00 | 71.00 | 207.00 | NULL |
+| 1002       | SUJNA  | 2018-02-23    | MBA    | 55.00 | 85.00 | 66.00 | 206.00 | NULL |
+| 4VP21CS001 | KUMAR  | 2021-05-14    | CS     | 45.00 | 93.00 | 70.00 | 208.00 | NULL |
+| 4VP21CS045 | MAHAR  | 2021-05-14    | CS     | 68.00 | 96.00 | 40.00 | 204.00 | NULL |
+| 4VP21MC020 | SAAYLI | 2020-03-11    | MCA    | 80.00 | 65.00 | 95.00 | 240.00 | NULL |
+| 4VP21MC021 | SUSHMA | 2021-04-12    | MCA    | 78.00 | 50.00 | 90.00 | 218.00 | NULL |
++------------+--------+---------------+--------+-------+-------+-------+--------+------+
+6 rows in set (0.00 sec)
+
+2.UPDATE STUDENT
+SET GPA=(TOTAL/3);
+
+mysql> SELECT *FROM STUDENT;
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| USN        | SNAME  | DATE_OF_BIRTH | BRANCH | MARK1 | MARK2 | MARK3 | TOTAL  | GPA   |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| 1001       | PAVAN  | 2022-07-21    | MBA    | 70.00 | 66.00 | 71.00 | 207.00 | 69.00 |
+| 1002       | SUJNA  | 2018-02-23    | MBA    | 55.00 | 85.00 | 66.00 | 206.00 | 68.67 |
+| 4VP21CS001 | KUMAR  | 2021-05-14    | CS     | 45.00 | 93.00 | 70.00 | 208.00 | 69.33 |
+| 4VP21CS045 | MAHAR  | 2021-05-14    | CS     | 68.00 | 96.00 | 40.00 | 204.00 | 68.00 |
+| 4VP21MC020 | SAAYLI | 2020-03-11    | MCA    | 80.00 | 65.00 | 95.00 | 240.00 | 80.00 |
+| 4VP21MC021 | SUSHMA | 2021-04-12    | MCA    | 78.00 | 50.00 | 90.00 | 218.00 | 72.67 |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+6 rows in set (0.00 sec)
+
+3.SELECT USN,SNAME
+FROM STUDENT
+WHERE DATE_OF_BIRTH BETWEEN '2018-02-23' AND '2020-07-21';
+
++------------+--------+
+| USN        | SNAME  |
++------------+--------+
+| 1002       | SUJNA  |
+| 4VP21MC020 | SAAYLI |
++------------+--------+
+2 rows in set (0.00 sec)
+
+4.SELECT *
+FROM STUDENT
+WHERE BRANCH='MCA';
+
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| USN        | SNAME  | DATE_OF_BIRTH | BRANCH | MARK1 | MARK2 | MARK3 | TOTAL  | GPA   |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| 4VP21MC020 | SAAYLI | 2020-03-11    | MCA    | 80.00 | 65.00 | 95.00 | 240.00 | 80.00 |
+| 4VP21MC021 | SUSHMA | 2021-04-12    | MCA    | 78.00 | 50.00 | 90.00 | 218.00 | 72.67 |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+2 rows in set (0.00 sec)
+
+5.SELECT BRANCH,MAX(GPA)
+FROM STUDENT
+GROUP BY BRANCH;
+
++--------+----------+
+| BRANCH | MAX(GPA) |
++--------+----------+
+| MBA    |    69.00 |
+| CS     |    69.33 |
+| MCA    |    80.00 |
++--------+----------+
+3 rows in set (0.00 sec)
+
+6.SELECT SNAME
+FROM STUDENT
+WHERE SNAME LIKE '%S%';
+
++--------+
+| SNAME  |
++--------+
+| SUJNA  |
+| SAAYLI |
+| SUSHMA |
++--------+
+3 rows in set (0.00 sec)
+
+7.SELECT SNAME 
+FROM STUDENT
+WHERE SNAME LIKE '%AR';
+
++-------+
+| SNAME |
++-------+
+| KUMAR |
+| MAHAR |
++-------+
+2 rows in set (0.00 sec)
+
+8.DELETE FROM STUDENT
+WHERE USN='1001';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM STUDENT;
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| USN        | SNAME  | DATE_OF_BIRTH | BRANCH | MARK1 | MARK2 | MARK3 | TOTAL  | GPA   |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+| 1002       | SUJNA  | 2018-02-23    | MBA    | 55.00 | 85.00 | 66.00 | 206.00 | 68.67 |
+| 4VP21CS001 | KUMAR  | 2021-05-14    | CS     | 45.00 | 93.00 | 70.00 | 208.00 | 69.33 |
+| 4VP21CS045 | MAHAR  | 2021-05-14    | CS     | 68.00 | 96.00 | 40.00 | 204.00 | 68.00 |
+| 4VP21MC020 | SAAYLI | 2020-03-11    | MCA    | 80.00 | 65.00 | 95.00 | 240.00 | 80.00 |
+| 4VP21MC021 | SUSHMA | 2021-04-12    | MCA    | 78.00 | 50.00 | 90.00 | 218.00 | 72.67 |
++------------+--------+---------------+--------+-------+-------+-------+--------+-------+
+5 rows in set (0.00 sec)
+
+SELECT *FROM STUDENT 
+WHERE PUBLISHER=BOOKID;
+
+SELECT *FROM BOOK,BORROW
+GROUP BY USN
+HAVING 
+
+SELECT *FROM STUDENT S
+WHERE EXISTS
+(SELECT BR.USN
+FROM BORROW BR,BOOK BK
+WHERE BR.BOOKID=BK.BOOKID AND BR.USN=S.USN
+GROUP BY PUBLISHER
+
+
+
+
