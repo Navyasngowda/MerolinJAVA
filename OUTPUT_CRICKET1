@@ -1,0 +1,48 @@
+1) SELECT PLAYERNAME,TEAMNAME,AGE FROM PLAYER P,TEAM T 
+WHERE P.TEAMID=T.TEAMID AND AGE=(SELECT MIN(AGE) FROM PLAYER);
+
++------------+----------+-----+
+| PLAYERNAME | TEAMNAME | AGE |
++------------+----------+-----+
+| MACWIL     | RCB      |  25 |
++------------+----------+-----+
+1 row in set (0.00 sec)
+
+
+2)SELECT * FROM STADIUM 
+WHERE STADIUM_ID=(SELECT STADIUM_ID FROM MATCH1 GROUP BY STADIUM_ID ORDER BY COUNT(MATCHID) DESC LIMIT 1);
+
++------------+--------------+----------+-----------+---------+
+| STADIUM_ID | STADIUM_NAME | CITY     | AREA_NAME | PINCODE |
++------------+--------------+----------+-----------+---------+
+| S1         | KANTIRAVA    | BANGLORE | RRNAGARA  |  574203 |
++------------+--------------+----------+-----------+---------+
+1 row in set (0.00 sec)
+
+3) SELECT *FROM PLAYER WHERE PLAYERID IN(
+SELECT PLAYERID FROM MAN_OF_MATCH WHERE PLAYERID NOT IN(
+SELECT CAPTAINID FROM TEAM)
+GROUP BY PLAYERID HAVING COUNT(PLAYERID)>=2);
+
++----------+------------+-----------+-----+--------+
+| PLAYERID | PLAYERNAME | CONTACT   | AGE | TEAMID |
++----------+------------+-----------+-----+--------+
+| P1       | PAVAN      | 902345673 |  30 | T1     |
++----------+------------+-----------+-----+--------+
+1 row in set (0.00 sec)
+
+
+
+4) SELECT *FROM TEAM WHERE TEAMID=(SELECT WINNER_TEAM_ID FROM MATCH1 GROUP BY WINNER_TEAM_ID ORDER BY COUNT(MATCH1.WINNER_TEAM_ID)DESC LIMIT 1);
+
++--------+----------+---------+----------+-----------+
+| TEAMID | TEAMNAME | COACH   | CITY     | CAPTAINID |
++--------+----------+---------+----------+-----------+
+| T1     | CSK      | GANGULI | BANGLORE | P2        |
++--------+----------+---------+----------+-----------+
+1 row in set (0.00 sec)
+=====================================================================================================================================
+5) SELECT *FROM TEAM WHERE TEAMID IN(SELECT WINNER_TEAM_ID FROM MATCH1 GROUP BY WINNER_TEAM_ID,STADIUM_ID HAVING COUNT(STADIUM_ID));
+
+
+
