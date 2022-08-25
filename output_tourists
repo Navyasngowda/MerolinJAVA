@@ -1,0 +1,167 @@
+create table tourists_place(
+    -> tourists_place_id int(10) primary key,
+    -> history varchar(20),
+    -> kilometers int(3),
+    -> state varchar(20),
+    -> t_placename varchar(20));
+Query OK, 0 rows affected, 2 warnings (0.03 sec)
+
+mysql> desc tourists_place;
++-------------------+-------------+------+-----+---------+-------+
+| Field             | Type        | Null | Key | Default | Extra |
++-------------------+-------------+------+-----+---------+-------+
+| tourists_place_id | int         | NO   | PRI | NULL    |       |
+| history           | varchar(20) | YES  |     | NULL    |       |
+| kilometers        | int         | YES  |     | NULL    |       |
+| state             | varchar(20) | YES  |     | NULL    |       |
+| t_placename       | varchar(20) | YES  |     | NULL    |       |
++-------------------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> create table tourists(
+    -> t_id int(5) primary key,
+    -> country varchar(20),
+    -> age int(10),
+    -> tourists_name varchar(20));
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> desc tourists;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| t_id          | int         | NO   | PRI | NULL    |       |
+| country       | varchar(20) | YES  |     | NULL    |       |
+| age           | int         | YES  |     | NULL    |       |
+| tourists_name | varchar(20) | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table visits(
+    -> tourists_place_id int(3) references tourists_place(tourists_place_id),
+    -> t_id int(5) references tourists(t_id),
+    -> vdate date,
+    -> primary key(tourists_place_id,t_id));
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> desc visits;
++-------------------+------+------+-----+---------+-------+
+| Field             | Type | Null | Key | Default | Extra |
++-------------------+------+------+-----+---------+-------+
+| tourists_place_id | int  | NO   | PRI | NULL    |       |
+| t_id              | int  | NO   | PRI | NULL    |       |
+| vdate             | date | YES  |     | NULL    |       |
++-------------------+------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table email(
+    -> t_id int(10) references tourists(t_id),
+    -> email varchar(20),
+    -> primary key(t_id,email));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> desc email;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| t_id  | int         | NO   | PRI | NULL    |       |
+| email | varchar(20) | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into tourists_place
+    -> values(101,'beauty',160,'karnataka','ooty');
+Query OK, 1 row affected (4.30 sec)
+
+mysql> select *from tourists_place;
++-------------------+-----------+------------+-----------+-------------+
+| tourists_place_id | history   | kilometers | state     | t_placename |
++-------------------+-----------+------------+-----------+-------------+
+|               101 | beauty    |        160 | karnataka | ooty        |
+|               102 | pearl     |         80 | karnataka | puttur      |
+|               103 | nature    |        200 | tamilnadu | madurai     |
+|               104 | culture   |        160 | bihar     | patna       |
+|               105 | tradition |        300 | assam     | tezpur      |
++-------------------+-----------+------------+-----------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into tourists
+    -> values(20,'india',34,'prakash');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from tourists;
++------+----------+------+---------------+
+| t_id | country  | age  | tourists_name |
++------+----------+------+---------------+
+|   20 | india    |   34 | prakash       |
+|   21 | india    |   31 | melisha       |
+|   22 | banglore |   21 | macwil        |
+|   23 | manglore |   40 | akash         |
+|   24 | manglore |   31 | riyona        |
++------+----------+------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into visits
+    -> values(101,20,'2021-05-21');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from visits;
++-------------------+------+------------+
+| tourists_place_id | t_id | vdate      |
++-------------------+------+------------+
+|               101 |   20 | 2021-05-21 |
+|               102 |   21 | 2020-01-19 |
+|               103 |   22 | 2015-04-20 |
+|               104 |   23 | 2018-08-22 |
+|               105 |   24 | 2022-05-21 |
++-------------------+------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into email
+    -> values(20,'prakash@email.com');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from email;
++------+-------------------+
+| t_id | email             |
++------+-------------------+
+|   20 | prakash@email.com |
+|   20 | riyona@email.com  |
+|   21 | melisha@email.com |
+|   22 | macwil@email.com  |
+|   23 | akash@email.com   |
++------+-------------------+
+5 rows in set (0.00 sec)
+
+1)  mysql> select state,count(tourists_place_id) 
+    -> from tourists_place
+    -> group by state order by count(tourists_place_id)desc limit 1;
++-----------+--------------------------+
+| state     | count(tourists_place_id) |
++-----------+--------------------------+
+| karnataka |                        2 |
++-----------+--------------------------+
+1 row in set (0.00 sec)
+
+
+
+2) mysql> select tp.tourists_place_id,tp.t_placename,tp.state,count(v.t_id)
+    -> from tourists_place tp,visits v where v.tourists_place_id=tp.tourists_place_id group by v.tourists_place_id order by count(v.tourists_place_id)desc limit 1;
++-------------------+-------------+-----------+---------------+
+| tourists_place_id | t_placename | state     | count(v.t_id) |
++-------------------+-------------+-----------+---------------+
+|               101 | ooty        | karnataka |             1 |
++-------------------+-------------+-----------+---------------+
+1 row in set (0.00 sec)
+
+3) mysql> select *from tourists
+    -> where t_id in
+    -> (select t_id from visits,tourists_place where visits.tourists_place_id=tourists_place.tourists_place_id and state='karnataka');
++------+---------+------+---------------+
+| t_id | country | age  | tourists_name |
++------+---------+------+---------------+
+|   20 | india   |   34 | prakash       |
+|   21 | india   |   31 | melisha       |
++------+---------+------+---------------+
+2 rows in set (0.00 sec)
+
+
