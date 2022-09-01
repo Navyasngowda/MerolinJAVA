@@ -132,9 +132,9 @@ mysql> select *from email;
 +------+-------------------+
 5 rows in set (0.00 sec)
 
-1)  mysql> select state,count(tourists_place_id) 
-    -> from tourists_place
-    -> group by state order by count(tourists_place_id)desc limit 1;
+1)  select state,count(tourists_place_id) 
+    from tourists_place
+     group by state order by count(tourists_place_id)desc limit 1;
 +-----------+--------------------------+
 | state     | count(tourists_place_id) |
 +-----------+--------------------------+
@@ -144,8 +144,8 @@ mysql> select *from email;
 
 
 
-2) mysql> select tp.tourists_place_id,tp.t_placename,tp.state,count(v.t_id)
-    -> from tourists_place tp,visits v where v.tourists_place_id=tp.tourists_place_id group by v.tourists_place_id order by count(v.tourists_place_id)desc limit 1;
+2) select tp.tourists_place_id,tp.t_placename,tp.state,count(v.t_id)
+   from tourists_place tp,visits v where v.tourists_place_id=tp.tourists_place_id group by v.tourists_place_id order by count(v.tourists_place_id)desc limit 1;
 +-------------------+-------------+-----------+---------------+
 | tourists_place_id | t_placename | state     | count(v.t_id) |
 +-------------------+-------------+-----------+---------------+
@@ -153,9 +153,9 @@ mysql> select *from email;
 +-------------------+-------------+-----------+---------------+
 1 row in set (0.00 sec)
 
-3) mysql> select *from tourists
-    -> where t_id in
-    -> (select t_id from visits,tourists_place where visits.tourists_place_id=tourists_place.tourists_place_id and state='karnataka');
+3) select *from tourists
+     where t_id in
+    (select t_id from visits,tourists_place where visits.tourists_place_id=tourists_place.tourists_place_id and state='karnataka');
 +------+---------+------+---------------+
 | t_id | country | age  | tourists_name |
 +------+---------+------+---------------+
@@ -163,5 +163,77 @@ mysql> select *from email;
 |   21 | india   |   31 | melisha       |
 +------+---------+------+---------------+
 2 rows in set (0.00 sec)
+-----------------------------------------------------------------------------------------
+
+4) select *from tourists
+    where t_id in(select t_id from visits,
+    tourists_place where visits.tourists_place_id=tourists_place.tourists_place_id
+    group by t_id having count(distinct state)
+    in(select count(distinct state)from tourists_place));
++------+---------+------+---------------+
+| t_id | country | age  | tourists_name |
++------+---------+------+---------------+
+|   20 | india   |   34 | prakash       |
++------+---------+------+---------------+
+1 row in set (0.00 sec)
+
+5)mysql> select *from tourists_place where tourists_place_id in(select tourists_place_id
+    -> from visits,tourists 
+    -> where visits.t_id=tourists.t_id
+    -> group by tourists_place_id having count(distinct country)=(select count(distinct country)from tourists));
++-------------------+---------+------------+-----------+-------------+
+| tourists_place_id | history | kilometers | state     | t_placename |
++-------------------+---------+------------+-----------+-------------+
+|               101 | beauty  |        160 | karnataka | ooty        |
++-------------------+---------+------------+-----------+-------------+
+1 row in set (0.00 sec)
+----------------------------------------------------------------------
+
+mysql> SELECT *FROM visits;
++-------------------+------+------------+
+| tourists_place_id | t_id | vdate      |
++-------------------+------+------------+
+|               101 |   20 | 2022-05-21 |
+|               101 |   21 | 2021-05-21 |
+|               101 |   22 | 2020-01-19 |
+|               101 |   23 | 2015-04-20 |
+|               101 |   24 | 2018-08-22 |
++-------------------+------+------------+
+5 rows in set (0.00 sec)
+---------------------------------------------------------------------------
+mysql> select state,count(tourists_place_id) 
+    ->     from tourists_place
+    ->      group by state order by count(tourists_place_id)desc limit 1;
++-----------+--------------------------+
+| state     | count(tourists_place_id) |
++-----------+--------------------------+
+| karnataka |                        2 |
++-----------+--------------------------+
+1 row in set (0.00 sec)
+
+mysql> select tp.tourists_place_id,tp.t_placename,tp.state,count(v.t_id)
+    ->    from tourists_place tp,visits v where v.tourists_place_id=tp.tourists_place_id group by v.tourists_place_id order by count(v.tourists_place_id)desc limit 1;
++-------------------+-------------+-----------+---------------+
+| tourists_place_id | t_placename | state     | count(v.t_id) |
++-------------------+-------------+-----------+---------------+
+|               101 | ooty        | karnataka |             5 |
++-------------------+-------------+-----------+---------------+
+1 row in set (0.01 sec)
+
+mysql> select *from tourists
+    ->      where t_id in
+    ->     (select t_id from visits,tourists_place where visits.tourists_place_id=tourists_place.tourists_place_id and state='karnataka');
++------+----------+------+---------------+
+| t_id | country  | age  | tourists_name |
++------+----------+------+---------------+
+|   20 | india    |   34 | prakash       |
+|   21 | india    |   31 | melisha       |
+|   22 | banglore |   21 | macwil        |
+|   23 | manglore |   40 | akash         |
+|   24 | manglore |   31 | riyona        |
++------+----------+------+---------------+
+5 rows in set (0.00 sec)
+
+
 
 

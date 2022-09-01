@@ -1,0 +1,236 @@
+create table constituency(
+const_id int(10) primary key,
+cname varchar(20),
+cstate varchar(20),
+no_of_votes int(10));
+
+create table party(
+pid int(20) primary key,
+pname varchar(20),
+psymbol varchar(20));
+
+create table candidate(
+cand_id int(20) primary key,
+name varchar(20),
+phone_no int(10),
+age int(2),
+state varchar(20),
+pid int references party(pid));
+
+create table voter(
+vid int(20) primary key,
+vname varchar(20),
+vage int(2),
+address varchar(20),
+const_id int(20) references constituency(const_id),
+cand_id int(20) references candidates(cand_id));
+
+create table contest(
+const_id int(20) references constituency(const_id),
+cand_id int(20) references candidate(cand_id),
+primary key(const_id,cand_id));
+------------------------------------------------------------------------------------------------------------------------------
+
+
+mysql> desc constituency;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| const_id    | int         | NO   | PRI | NULL    |       |
+| cname       | varchar(20) | YES  |     | NULL    |       |
+| cstate      | varchar(20) | YES  |     | NULL    |       |
+| no_of_votes | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc candidate;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| cand_id  | int         | NO   | PRI | NULL    |       |
+| name     | varchar(20) | YES  |     | NULL    |       |
+| phone_no | int         | YES  |     | NULL    |       |
+| age      | int         | YES  |     | NULL    |       |
+| state    | varchar(20) | YES  |     | NULL    |       |
+| pid      | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> desc voter;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| vid      | int         | NO   | PRI | NULL    |       |
+| vname    | varchar(20) | YES  |     | NULL    |       |
+| vage     | int         | YES  |     | NULL    |       |
+| address  | varchar(20) | YES  |     | NULL    |       |
+| const_id | int         | YES  |     | NULL    |       |
+| cand_id  | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> desc party;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| pid     | int         | NO   | PRI | NULL    |       |
+| pname   | varchar(20) | YES  |     | NULL    |       |
+| psymbol | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc contest;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| const_id | int  | NO   | PRI | NULL    |       |
+| cand_id  | int  | NO   | PRI | NULL    |       |
++----------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into constituency
+    -> values(11,'manglore','karnataka',8000);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into constituency
+    -> values(12,'puttur','karnataka',5000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> insert into constituency
+    -> values(13,'kasargod','kerala',5000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into constituency
+    -> values(13,'payyanur','kannur',10000);
+ERROR 1062 (23000): Duplicate entry '13' for key 'constituency.PRIMARY'
+mysql> insert into constituency
+    -> values(14,'payyanur','kannur',10000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from constituency;
++----------+----------+-----------+-------------+
+| const_id | cname    | cstate    | no_of_votes |
++----------+----------+-----------+-------------+
+|       11 | manglore | karnataka |        8000 |
+|       12 | puttur   | karnataka |        5000 |
+|       13 | kasargod | kerala    |        5000 |
+|       14 | payyanur | kannur    |       10000 |
++----------+----------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into party
+    -> values(101,'congress','hand');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into party
+    -> values(102,'bjp','lotus');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into party
+    -> values(103,'jds','janatadal');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> select *from party;
++-----+----------+-----------+
+| pid | pname    | psymbol   |
++-----+----------+-----------+
+| 101 | congress | hand      |
+| 102 | bjp      | lotus     |
+| 103 | jds      | janatadal |
++-----+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into candidate
+    -> values(201,'ajay',1234567891,35,'karnataka',101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> insert into candidate
+    -> values(202,'babulal',9087675467,40,'kerala',102);
+ERROR 1264 (22003): Out of range value for column 'phone_no' at row 1
+mysql> 
+mysql> insert into candidate
+    -> values(202,'babulal',908767546,40,'kerala',102);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into candidate
+    -> values(203,'hema',945323451,39,'karnataka',102);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into candidate
+    -> values(204,'deepthi',945323345,45,'kerala',103);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from candidate;
++---------+---------+------------+------+-----------+------+
+| cand_id | name    | phone_no   | age  | state     | pid  |
++---------+---------+------------+------+-----------+------+
+|     201 | ajay    | 1234567891 |   35 | karnataka |  101 |
+|     202 | babulal |  908767546 |   40 | kerala    |  102 |
+|     203 | hema    |  945323451 |   39 | karnataka |  102 |
+|     204 | deepthi |  945323345 |   45 | kerala    |  103 |
++---------+---------+------------+------+-----------+------+
+4 rows in set (0.00 sec)
+
+mysql> insert into voter
+    -> values(301,'melisha',34,'puttur',11,201);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into voter
+    -> values(302,'macwil',40,'manglore',11,201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into voter
+    -> values(303,'shilpa',42,'banglore',12,202);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into voter
+    -> values(304,'sujna',50,'banglore',13,203);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> 
+mysql> select *from voter;
++-----+---------+------+----------+----------+---------+
+| vid | vname   | vage | address  | const_id | cand_id |
++-----+---------+------+----------+----------+---------+
+| 301 | melisha |   34 | puttur   |       11 |     201 |
+| 302 | macwil  |   40 | manglore |       11 |     201 |
+| 303 | shilpa  |   42 | banglore |       12 |     202 |
+| 304 | sujna   |   50 | banglore |       13 |     203 |
++-----+---------+------+----------+----------+---------+
+4 rows in set (0.01 sec)
+
+mysql> insert into contest
+    -> values(11,201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into contest
+    -> values(12,202);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into contest
+    -> values(13,203);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into contest
+    -> values(14,204);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from contest;
++----------+---------+
+| const_id | cand_id |
++----------+---------+
+|       11 |     201 |
+|       12 |     202 |
+|       13 |     203 |
+|       14 |     204 |
++----------+---------+
+4 rows in set (0.00 sec)
+
+ 
+
+
+
+
