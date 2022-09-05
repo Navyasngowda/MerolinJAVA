@@ -1,0 +1,298 @@
+1) CREATE TABLE TEAM(
+ TEAMID VARCHAR(20) PRIMARY KEY,
+ TEAMNAME VARCHAR(20) NOT NULL,
+ COACH VARCHAR(20),
+ CITY VARCHAR(20));
+
+ ALTER TABLE TEAM
+ ADD CAPTAINID VARCHAR(20);
+ 
+ ALTER TABLE TEAM
+ ADD FOREIGN KEY(CAPTAINID)REFERENCES PLAYER(PLAYERID);
+ 
+ mysql> DESC TEAM;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| TEAMID    | varchar(20) | NO   | PRI | NULL    |       |
+| TEAMNAME  | varchar(20) | NO   |     | NULL    |       |
+| COACH     | varchar(20) | YES  |     | NULL    |       |
+| CITY      | varchar(20) | YES  |     | NULL    |       |
+| CAPTAINID | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+INSERT INTO TEAM(TEAMID,TEAMNAME,COACH,CITY)
+VALUES('T1','CSK','GANGULI','BANGLORE');
+
+UPDATE TEAM
+SET CAPTAINID='P2';
+
+SELECT *FROM TEAM;
++--------+----------+---------+----------+-----------+
+| TEAMID | TEAMNAME | COACH   | CITY     | CAPTAINID |
++--------+----------+---------+----------+-----------+
+| T1     | CSK      | GANGULI | BANGLORE | P2        |
+| T2     | RCB      | KAPIL   | BANGLORE | P2        |
+| T3     | MI       | ROHITH  | MUMBAI   | P2        |
+| T4     | PUNJAB   | KAPIL   | BANGLORE | P2        |
++--------+----------+---------+----------+-----------+
+
+4 rows in set (0.00 sec)
+---------------------------------------------------------------------------------------------------------------------------------------
+
+2)  CREATE TABLE PLAYER(
+ PLAYERID VARCHAR(20) PRIMARY KEY,
+ PLAYERNAME VARCHAR(20) NOT NULL,
+ CONTACT INT(10) NOT NULL,
+ AGE INT(6) NOT NULL,
+ TEAMID VARCHAR(20),
+ FOREIGN KEY(TEAMID)REFERENCES TEAM(TEAMID));
+
+mysql> DESC PLAYER;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| PLAYERID   | varchar(20) | NO   | PRI | NULL    |       |
+| PLAYERNAME | varchar(20) | NO   |     | NULL    |       |
+| CONTACT    | int         | NO   |     | NULL    |       |
+| AGE        | int         | NO   |     | NULL    |       |
+| TEAMID     | varchar(20) | YES  | MUL | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+INSERT INTO PLAYER(PLAYERID,PLAYERNAME,CONTACT,AGE)
+VALUES('P1','PAVAN','902345673','30');
+
+UPDATE PLAYER
+SET TEAMID='T1'
+WHERE PLAYERID='P1';
+
+mysql> SELECT *FROM PLAYER;
++----------+------------+-----------+-----+--------+
+| PLAYERID | PLAYERNAME | CONTACT   | AGE | TEAMID |
++----------+------------+-----------+-----+--------+
+| P1       | PAVAN      | 902345673 |  30 | T1     |
+| P2       | MACWIL     | 902845170 |  25 | T2     |
+| P3       | DHONI      | 912645172 |  40 | T3     |
+| P4       | VIRAT      | 913545132 |  67 | NULL   |
+| P5       | JADEJA     | 913555131 |  30 | NULL   |
++----------+------------+-----------+-----+--------+
+5 rows in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3) mysql> CREATE TABLE MATCH1(
+    -> WINNER_TEAM_ID VARCHAR(20),
+    -> FOREIGN KEY(WINNER_TEAM_ID)REFERENCES TEAM(TEAMID),
+    -> MATCHID VARCHAR(20) PRIMARY KEY,
+    -> TEAMID1 VARCHAR(20),
+    -> FOREIGN KEY(TEAMID1)REFERENCES TEAM(TEAMID),
+    -> TEAMID2 VARCHAR(20),
+    -> FOREIGN KEY(TEAMID2)REFERENCES TEAM(TEAMID),
+    -> SDATE DATE,
+    -> STIME TIMESTAMP);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> ALTER TABLE MATCH1
+    -> ADD STADIUM_ID VARCHAR(20);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE MATCH1
+    -> ADD FOREIGN KEY(STADIUM_ID)REFERENCES STADIUM(STADIUM_ID);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC MATCH1;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| WINNER_TEAM_ID | varchar(20) | YES  | MUL | NULL    |       |
+| MATCHID        | varchar(20) | NO   | PRI | NULL    |       |
+| TEAMID1        | varchar(20) | YES  | MUL | NULL    |       |
+| TEAMID2        | varchar(20) | YES  | MUL | NULL    |       |
+| SDATE          | date        | YES  |     | NULL    |       |
+| STIME          | timestamp   | YES  |     | NULL    |       |
+| STADIUM_ID     | varchar(20) | YES  | MUL | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO MATCH1(MATCHID,SDATE,STIME,STADIUM_ID)
+    -> VALUES('M1','2019-09-02','190902','S1');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM MATCH1;
++----------------+---------+---------+---------+------------+---------------------+------------+
+| WINNER_TEAM_ID | MATCHID | TEAMID1 | TEAMID2 | SDATE      | STIME               | STADIUM_ID |
++----------------+---------+---------+---------+------------+---------------------+------------+
+| NULL           | M1      | NULL    | NULL    | 2019-09-02 | 2019-09-02 00:00:00 | S1         |
+| NULL           | M2      | NULL    | NULL    | 2020-11-12 | 2020-11-12 00:00:00 | S1         |
+| NULL           | M3      | NULL    | NULL    | 2021-06-15 | 2021-06-15 00:00:00 | S2         |
+| NULL           | M4      | NULL    | NULL    | 2021-06-15 | 2021-06-15 00:00:00 | S2         |
+| NULL           | M5      | NULL    | NULL    | 2018-04-11 | 2018-04-11 00:00:00 | S3         |
++----------------+---------+---------+---------+------------+---------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE MATCH1
+    -> SET WINNER_TEAM_ID='T1'
+    -> WHERE MATCHID='M1';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE MATCH1
+    -> SET TEAMID1='T1'
+    -> WHERE MATCHID='M1';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE MATCH1
+    -> SET TEAMID2='T1'
+    -> WHERE MATCHID='M1';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT *FROM MATCH1;
++----------------+---------+---------+---------+------------+---------------------+------------+
+| WINNER_TEAM_ID | MATCHID | TEAMID1 | TEAMID2 | SDATE      | STIME               | STADIUM_ID |
++----------------+---------+---------+---------+------------+---------------------+------------+
+| T1             | M1      | T2      | T1      | 2019-09-02 | 2019-09-02 00:00:00 | S1         |
+| T1             | M2      | T1      | T1      | 2020-11-12 | 2020-11-12 00:00:00 | S1         |
+| T2             | M3      | T3      | T2      | 2021-06-15 | 2021-06-15 00:00:00 | S2         |
+| T3             | M4      | T3      | T3      | 2021-06-15 | 2021-06-15 00:00:00 | S2         |
+| T2             | M5      | T2      | T2      | 2018-04-11 | 2018-04-11 00:00:00 | S3         |
++----------------+---------+---------+---------+------------+---------------------+------------+
+5 rows in set (0.01 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+4) mysql> CREATE TABLE STADIUM(
+    -> STADIUM_ID VARCHAR(20) PRIMARY KEY,
+    -> STADIUM_NAME VARCHAR(20) NOT NULL,
+    -> CITY VARCHAR(20),
+    -> AREA_NAME VARCHAR(20),
+    -> PINCODE INT(10));
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+
+mysql> DESC STADIUM;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| STADIUM_ID   | varchar(20) | NO   | PRI | NULL    |       |
+| STADIUM_NAME | varchar(20) | NO   |     | NULL    |       |
+| CITY         | varchar(20) | YES  |     | NULL    |       |
+| AREA_NAME    | varchar(20) | YES  |     | NULL    |       |
+| PINCODE      | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO STADIUM(STADIUM_ID,STADIUM_NAME,CITY,AREA_NAME,PINCODE)
+    -> VALUES('S1','KANTIRAVA','BANGLORE','RRNAGARA','574203');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM STADIUM;
++------------+---------------+----------+-----------+---------+
+| STADIUM_ID | STADIUM_NAME  | CITY     | AREA_NAME | PINCODE |
++------------+---------------+----------+-----------+---------+
+| S1         | KANTIRAVA     | BANGLORE | RRNAGARA  |  574203 |
+| S2         | PRATHIBHA     | BANGLORE | RRNAGARA  |  574203 |
+| S3         | SABHABHAVANA  | MUMBAI   | MANGLORE  |   76452 |
+| S4         | INTERNATIONAL | MUMBAI   | RRNAGARA  |   76451 |
+| S5         | INTERNATIONAL | MUMBAI   | MARIL     |   76453 |
++------------+---------------+----------+-----------+---------+
+5 rows in set (0.00 sec)
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+5) CREATE TABLE MAN_OF_MATCH(
+PLAYERID VARCHAR(20),
+MATCHID VARCHAR(20),
+PRIMARY KEY(PLAYERID,MATCHID));
+
+ALTER TABLE MAN_OF_MATCH
+    ADD FOREIGN KEY(PLAYERID)REFERENCES PLAYER(PLAYERID);
+    
+ALTER TABLE MAN_OF_MATCH
+ADD FOREIGN KEY(MATCHID)REFERENCES MATCH1(MATCHID);
+
+mysql> DESC MAN_OF_MATCH;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| PLAYERID | varchar(20) | NO   | PRI | NULL    |       |
+| MATCHID  | varchar(20) | NO   | PRI | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> INSERT INTO MAN_OF_MATCH(PLAYERID,MATCHID)
+    -> VALUES('P1','M1');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM MAN_OF_MATCH;
++----------+---------+
+| PLAYERID | MATCHID |
++----------+---------+
+| P1       | M1      |
+| P1       | M2      |
+| P2       | M2      |
+| P3       | M3      |
+| P1       | M4      |
++----------+---------+
+5 rows in set (0.00 sec)
+---------------------------------------------------------------------------------------------------------------------------------------
+
+1) SELECT PLAYERNAME,TEAMNAME,AGE FROM PLAYER P,TEAM T 
+WHERE P.TEAMID=T.TEAMID AND AGE=(SELECT MIN(AGE) FROM PLAYER);
+
++------------+----------+-----+
+| PLAYERNAME | TEAMNAME | AGE |
++------------+----------+-----+
+| MACWIL     | RCB      |  25 |
++------------+----------+-----+
+1 row in set (0.00 sec)
+
+
+2)SELECT * FROM STADIUM 
+WHERE STADIUM_ID=(SELECT STADIUM_ID FROM MATCH1 GROUP BY STADIUM_ID ORDER BY COUNT(MATCHID) DESC LIMIT 1);
+
++------------+--------------+----------+-----------+---------+
+| STADIUM_ID | STADIUM_NAME | CITY     | AREA_NAME | PINCODE |
++------------+--------------+----------+-----------+---------+
+| S1         | KANTIRAVA    | BANGLORE | RRNAGARA  |  574203 |
++------------+--------------+----------+-----------+---------+
+1 row in set (0.00 sec)
+
+3) SELECT *FROM PLAYER WHERE PLAYERID IN(
+SELECT PLAYERID FROM MAN_OF_MATCH WHERE PLAYERID NOT IN(
+SELECT CAPTAINID FROM TEAM)
+GROUP BY PLAYERID HAVING COUNT(PLAYERID)>=2);
+
++----------+------------+-----------+-----+--------+
+| PLAYERID | PLAYERNAME | CONTACT   | AGE | TEAMID |
++----------+------------+-----------+-----+--------+
+| P1       | PAVAN      | 902345673 |  30 | T1     |
++----------+------------+-----------+-----+--------+
+1 row in set (0.00 sec)
+
+
+
+4) SELECT *FROM TEAM WHERE TEAMID=(SELECT WINNER_TEAM_ID FROM MATCH1 GROUP BY WINNER_TEAM_ID ORDER BY COUNT(MATCH1.WINNER_TEAM_ID)DESC LIMIT 1);
+
++--------+----------+---------+----------+-----------+
+| TEAMID | TEAMNAME | COACH   | CITY     | CAPTAINID |
++--------+----------+---------+----------+-----------+
+| T1     | CSK      | GANGULI | BANGLORE | P2        |
++--------+----------+---------+----------+-----------+
+1 row in set (0.00 sec)
+=====================================================================================================================================
+5) SELECT *FROM TEAM WHERE TEAMID IN(SELECT WINNER_TEAM_ID FROM MATCH1 GROUP BY WINNER_TEAM_ID,STADIUM_ID HAVING COUNT(STADIUM_ID));
+
+
+
+
+
+
+
+
+
