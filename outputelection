@@ -1,0 +1,118 @@
+1) mysql> select *from candidate
+    -> where cand_id in(select cand_id from contest
+    -> join constituency on contest.const_id=constituency.const_id
+    -> group by cand_id having count(distinct(cstate))>1);
++---------+------+------------+------+-----------+------+
+| cand_id | name | phone_no   | age  | state     | pid  |
++---------+------+------------+------+-----------+------+
+|     201 | ajay | 1234567891 |   35 | karnataka |  101 |
++---------+------+------------+------+-----------+------+
+1 row in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------
+
+2)  mysql> select cstate,count(const_id)
+    -> from constituency group by cstate order by count(const_id)desc limit 1;
++-----------+-----------------+
+| cstate    | count(const_id) |
++-----------+-----------------+
+| karnataka |               3 |
++-----------+-----------------+
+1 row in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------------
+
+3) mysql> call abc(120,'geetha',25,'Manglore');
++--------------+
+| msg          |
++--------------+
+| row inserted |
++--------------+
+1 row in set (0.01 sec)
+
+mysql> select *from voter;
++-----+---------+------+----------+----------+---------+
+| vid | vname   | vage | address  | const_id | cand_id |
++-----+---------+------+----------+----------+---------+
+| 120 | geetha  |   25 | Manglore |     NULL |    NULL |
+| 301 | melisha |   34 | puttur   |       11 |     201 |
+| 302 | macwil  |   40 | manglore |       11 |     201 |
+| 303 | shilpa  |   42 | banglore |       12 |     202 |
+| 304 | sujna   |   50 | banglore |       13 |     203 |
++-----+---------+------+----------+----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> call abc(120,'geetha',16,'Manglore');
++--------------------+
+| msg                |
++--------------------+
+| voter not eligible |
++--------------------+
+1 row in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------------------
+
+
+
+5) mysql> create trigger new1
+    -> after insert on voter for each row 
+    -> begin
+    -> update constituency set 
+    -> constituency.no_of_votes=constituency.no_of_votes
+    -> +3 where const_id=new.const_id;
+    -> end$$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>    select *from constituency;
+    -> $$
++----------+----------+-----------+-------------+
+| const_id | cname    | cstate    | no_of_votes |
++----------+----------+-----------+-------------+
+|       11 | manglore | karnataka |        8000 |
+|       12 | puttur   | karnataka |        5000 |
+|       13 | kasargod | kerala    |        5000 |
+|       14 | payyanur | kannur    |       10000 |
+|       15 | manglore | karnataka |        8000 |
++----------+----------+-----------+-------------+
+5 rows in set (0.00 sec)
+
+
+mysql> insert into voter values(888,'melisha',34,'puttur',11,201);
+    -> $$
+Query OK, 1 row affected (0.01 sec)
+
+mysql>    select *from constituency;
+    -> $$
++----------+----------+-----------+-------------+
+| const_id | cname    | cstate    | no_of_votes |
++----------+----------+-----------+-------------+
+|       11 | manglore | karnataka |        8003 |
+|       12 | puttur   | karnataka |        5000 |
+|       13 | kasargod | kerala    |        5000 |
+|       14 | payyanur | kannur    |       10000 |
+|       15 | manglore | karnataka |        8000 |
++----------+----------+-----------+-------------+
+5 rows in set (0.00 sec)
+-----------------------------------------------------------------------------------------
+
+4) mysql> DELIMITER $$
+mysql> create procedure new1(csname varchar(20))
+    -> begin
+    -> select no_of_votes from constituency where csname=cname;
+    -> end$$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call new1('puttur');
+    -> $$
++-------------+
+| no_of_votes |
++-------------+
+|        5000 |
++-------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+
+
+
